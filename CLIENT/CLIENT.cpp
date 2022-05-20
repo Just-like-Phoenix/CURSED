@@ -54,23 +54,17 @@ void SendRequest(SOCKET soc, string id) {
 
 void SendReg(SOCKET soc) {
 	string log, pass;
+	char tfbuf[100];
 
 	system("cls");
 
 	cout << "Введите логин: ";
-	cin >> log;
+	getline(cin, log);
 	cout << "Введите пароль: ";
-	cin >> pass;
+	getline(cin, pass);
 
-	char lbuf[100];
-	char pbuf[100];
-	char tfbuf[100];
-
-	strcpy(lbuf, log.c_str());
-	strcpy(pbuf, pass.c_str());
-
-	send(soc, lbuf, sizeof(lbuf), 0);
-	send(soc, pbuf, sizeof(pbuf), 0);
+	send(soc, log.c_str(), sizeof(log.c_str()), 0);
+	send(soc, pass.c_str(), sizeof(pass.c_str()), 0);
 
 	recv(soc, tfbuf, sizeof(tfbuf), 0);
 
@@ -88,6 +82,8 @@ void Unreg() {
 
 void SendAdd(SOCKET soc) {
 	Menu menu;
+	string type;
+	string sbuf;
 	char buf[100];
 	menu.SetHeader("Группа товара");
 
@@ -100,19 +96,24 @@ void SendAdd(SOCKET soc) {
 
 		if (menu.currentID == "1") {
 			system("cls");
-			send(soc, "Бакалея", sizeof("Бакалея"), 0);
+			type.clear();
+			type = "Бакалея";
+			send(soc, type.c_str(), sizeof(type.c_str()), 0);
 			cout << "Введите код товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			getline(cin, sbuf);
+			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
 			cout << "Введите название товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			sbuf.clear();
+			getline(cin, sbuf);
+			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
 			cout << "Введите стоимость товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			sbuf.clear();
+			getline(cin, sbuf);
+			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);//*buf = '\0';
 			cout << "Введите поставщика товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			sbuf.clear();
+			getline(cin, sbuf);
+			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
 
 			running = false;
 		}

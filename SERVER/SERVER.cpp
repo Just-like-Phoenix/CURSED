@@ -73,7 +73,7 @@ void Save() {
 void AddProd(SOCKET s2, char* buf) {
 	*buf = '\0';
 	string group, name, dealer, code, cost, amount;
-	recv(s2, buf, 100, 0); group = buf; *buf = '\0';
+	//recv(s2, buf, 100, 0); group = buf; *buf = '\0';
 	recv(s2, buf, 100, 0); group = buf; *buf = '\0';
 	recv(s2, buf, 100, 0); code = buf; *buf = '\0';
 	recv(s2, buf, 100, 0); name = buf; *buf = '\0';
