@@ -53,18 +53,19 @@ void SendRequest(SOCKET soc, string id) {
 }
 
 void SendReg(SOCKET soc) {
-	string log, pass;
 	char tfbuf[100];
+	char log[100];
+	char pass[100];
 
 	system("cls");
 
 	cout << "Введите логин: ";
-	getline(cin, log);
+	cin.getline(log, 100);
 	cout << "Введите пароль: ";
-	getline(cin, pass);
+	cin.getline(pass, 100);
 
-	send(soc, log.c_str(), sizeof(log.c_str()), 0);
-	send(soc, pass.c_str(), sizeof(pass.c_str()), 0);
+	send(soc, log, sizeof(log), 0);
+	send(soc, pass, sizeof(pass), 0);
 
 	recv(soc, tfbuf, sizeof(tfbuf), 0);
 
@@ -82,7 +83,6 @@ void Unreg() {
 
 void SendAdd(SOCKET soc) {
 	Menu menu;
-	string sbuf;
 	char buf[100];
 	menu.SetHeader("Группа товара");
 
@@ -97,20 +97,17 @@ void SendAdd(SOCKET soc) {
 			system("cls");
 			send(soc, "Бакалея", sizeof("Бакалея"), 0);
 			cout << "Введите код товара: ";
-			getline(cin, sbuf);
-			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите название товара: ";
-			sbuf.clear();
-			getline(cin, sbuf);
-			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите стоимость товара: ";
-			sbuf.clear();
-			getline(cin, sbuf);
-			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);//*buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите поставщика товара: ";
-			sbuf.clear();
-			getline(cin, sbuf);
-			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 
 			running = false;
 		}
