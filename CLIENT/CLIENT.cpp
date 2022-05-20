@@ -82,7 +82,6 @@ void Unreg() {
 
 void SendAdd(SOCKET soc) {
 	Menu menu;
-	string type;
 	string sbuf;
 	char buf[100];
 	menu.SetHeader("Группа товара");
@@ -96,9 +95,7 @@ void SendAdd(SOCKET soc) {
 
 		if (menu.currentID == "1") {
 			system("cls");
-			type.clear();
-			type = "Бакалея";
-			send(soc, type.c_str(), sizeof(type.c_str()), 0);
+			send(soc, "Бакалея", sizeof("Бакалея"), 0);
 			cout << "Введите код товара: ";
 			getline(cin, sbuf);
 			send(soc, sbuf.c_str(), sizeof(sbuf.c_str()), 0);// *buf = '\0';
