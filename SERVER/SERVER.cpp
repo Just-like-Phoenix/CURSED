@@ -107,10 +107,6 @@ void AirAdd(SOCKET s2, char* buf) {
 
 	ss << weight;
 	ss >> bufw;
-
-	Air_Route air_rote;
-
-	air.push_back(air_rote(bufv, bufw));
 	
 	Air_Route air_rote(bufv, bufw);
 	air_rote.Set_type(type);
@@ -118,6 +114,8 @@ void AirAdd(SOCKET s2, char* buf) {
 	air_rote.Set_from(from);
 	air_rote.Set_to(to);
 	air_rote.Set_distance(distance);
+	
+	air.push_back(air_rote);
 }
 
 //void ShowProdAdmin(SOCKET s2, char* buf) {
@@ -314,7 +312,7 @@ DWORD WINAPI ThreadFunc(LPVOID client_socket)
 			}*/
 		}
 		else if (buf[0] == '2'){
-			if (!strcmp(buf, "2_21")) AirAdd(s2, buf);
+			if (!strcmp(buf, "2_2")) AirAdd(s2, buf);
 			
 		}
 		*buf = '\0';
