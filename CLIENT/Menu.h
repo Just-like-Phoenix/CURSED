@@ -72,12 +72,12 @@ public:
 		SetConsoleOutputCP(1251);
 		string menu;
 		if (main->parent != NULL) main->header = main->parent->arr[main->parent->paragraph - 1];
-		menu += "\n\n\n\n\n\n\n\n\t\t\t\t\t\t+--------------------+\n\t\t\t\t\t\t|";
+		menu += "\n\n\n\n\n\n\n\n\t\t\t\t\t\t+----------------------+\n\t\t\t\t\t\t|";
 
-		for (int j = 0; j < (20 - main->header.length()) / 2; j++) menu += " ";
+		for (int j = 0; j < (22 - main->header.length()) / 2; j++) menu += " ";
 		menu += main->header;
-		for (int j = 0; j < 20 - (main->header.length() + (20 - main->header.length()) / 2); j++) menu += " ";
-		menu += "|\n\t\t\t\t\t\t+--------------------+\n";
+		for (int j = 0; j < 22 - (main->header.length() + (22 - main->header.length()) / 2); j++) menu += " ";
+		menu += "|\n\t\t\t\t\t\t+----------------------+\n";
 
 		if (main->arr != NULL) {
 			for (int i = 0; i < main->countParam; i++) {
@@ -86,19 +86,19 @@ public:
 					cout << menu;
 					SetColor(0, bg);
 					cout << main->arr[i];
-					if (main->arr[i].length() < 20) {
-						for (int j = 0; j < 20 - main->arr[i].length(); j++) cout << " ";
+					if (main->arr[i].length() < 22) {
+						for (int j = 0; j < 22 - main->arr[i].length(); j++) cout << " ";
 					}
 					SetColor(7, 0);
 					menu.clear();
 				}
 				else {
 					menu += main->arr[i];
-					if (main->arr[i].length() < 20) {
-						for (int j = 0; j < 20 - main->arr[i].length(); j++) menu += " ";
+					if (main->arr[i].length() < 22) {
+						for (int j = 0; j < 22 - main->arr[i].length(); j++) menu += " ";
 					}
 				}
-				menu += "|\n\t\t\t\t\t\t+--------------------+\n";
+				menu += "|\n\t\t\t\t\t\t+----------------------+\n";
 			}
 			cout << menu;
 		}

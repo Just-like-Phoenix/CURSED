@@ -21,11 +21,11 @@ bool unreg = false;
 int counter = 0;
 float TotCost = 0;
 
-void Replace(char* buf, char replace, char to) {
-	for (int i = 0; i < 60; i++) {
-		if (buf[i] == replace) buf[i] = to;
-	}
-}
+//void Replace(char* buf, char replace, char to) {
+//	for (int i = 0; i < 60; i++) {
+//		if (buf[i] == replace) buf[i] = to;
+//	}
+//}
 
 class User {
 	bool isAdmin = false;
@@ -115,17 +115,17 @@ void SendAdd(SOCKET soc) {
 			system("cls");
 			send(soc, "Консервация", sizeof("Консервация"), 0);
 			cout << "Введите код товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите название товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите стоимость товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите поставщика товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 
 			running = false;
 		}
@@ -133,17 +133,17 @@ void SendAdd(SOCKET soc) {
 			system("cls");
 			send(soc, "Масла,уксусы", sizeof("Масла,уксусы"), 0);
 			cout << "Введите код товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите название товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите стоимость товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 			cout << "Введите поставщика товара: ";
-			cin >> buf;
-			send(soc, buf, 100, 0); *buf = '\0';
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
 
 			running = false;
 		}
@@ -152,20 +152,20 @@ void SendAdd(SOCKET soc) {
 
 void AdminSendShow(SOCKET soc) {
 	system("cls");
-	cout << "+--------+---------------+--------------------------------------------------+-----+---------------+\n";
-	cout << "|   Код  |     Группа    |                     Название                     | Цена|    Постащик   |\n";
-	cout << "+--------+---------------+--------------------------------------------------+-----+---------------+\n";
-	char group[100], name[100], cost[100], code[100], dealer[100];
+	cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
+	cout << "|   Код  |     Откуда    |     Куда      |   Дистанция   |      Тип      |     Цена      |\n";
+	cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
+	char code[100], from[100], to[100], distance[100] , type[100], price[100];
 	while (true) {
-		recv(soc, group, sizeof(group), 0);
-		if (strcmp(group, "0")) {
-			recv(soc, name, sizeof(name), 0);
-			Replace(name, '_', ' ');
-			recv(soc, cost, sizeof(cost), 0);
-			recv(soc, code, sizeof(code), 0);
-			recv(soc, dealer, sizeof(dealer), 0);
-			printf("|%8s|%15s|%50s|%5s|%15s|\n", code, group, name, cost, dealer);
-			cout << "+--------+---------------+--------------------------------------------------+-----+---------------+\n";
+		recv(soc, code, sizeof(code), 0);
+		if (strcmp(code, "0")) {
+			recv(soc, from, sizeof(from), 0);
+			recv(soc, to, sizeof(to), 0);
+			recv(soc, distance, sizeof(distance), 0);
+			recv(soc, type, sizeof(type), 0);
+			recv(soc, price, sizeof(price), 0);
+			printf("|%8s|%15s|%15s|%15s|%15s|%15s\n", code,  from, to, distance, type, price);
+			cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
 		}
 		else break;
 	}
@@ -181,7 +181,6 @@ void UserSendShow(SOCKET soc) {
 		recv(soc, group, sizeof(group), 0);
 		if (strcmp(group, "0")) {
 			recv(soc, name, sizeof(name), 0);
-			Replace(name, '_', ' ');
 			recv(soc, cost, sizeof(cost), 0);
 			recv(soc, state, sizeof(state), 0);
 			printf("|%4d|%15s|%50s|%5s|%16s|\n", counter + 1, group, name, cost, state);
@@ -202,7 +201,6 @@ void AdminSendShowWarehouse(SOCKET soc) {
 		recv(soc, group, sizeof(group), 0);
 		if (strcmp(group, "0")) {
 			recv(soc, name, sizeof(name), 0);
-			Replace(name, '_', ' ');
 			recv(soc, cost, sizeof(cost), 0);
 			recv(soc, code, sizeof(code), 0);
 			recv(soc, dealer, sizeof(dealer), 0);
@@ -254,7 +252,6 @@ void SendSearch(SOCKET soc) {
 		if (group[0] != '\0') {
 			exist = true;
 			recv(soc, name, sizeof(name), 0);
-			Replace(name, '_', ' ');
 			recv(soc, cost, sizeof(cost), 0);
 			recv(soc, state, sizeof(state), 0);
 			printf("|%15s|%50s|%5s|%16s|\n", group, name, cost, state);
@@ -299,7 +296,6 @@ void ShowCart(SOCKET soc) {
 		recv(soc, group, sizeof(group), 0);
 		if (group[0] != '\0') {
 			recv(soc, name, sizeof(name), 0);
-			Replace(name, '_', ' ');
 			recv(soc, cost, sizeof(cost), 0);
 			recv(soc, state, sizeof(state), 0);
 			TotCost += (float)strtod(cost, NULL) * atoi(state);
@@ -351,7 +347,7 @@ void main() {
 		UserMenu.sub[2].CreateMenu(4, "Посмотреть", "Добавить", "Удалить", "Оплатить");
 		UserMenu.function[3] = Unreg;
 	}
-	AdminMenu.CreateMenu(4, "Добавить наим-ние", "Показать наим-ния", "Склад", "Выйти из уч.з.");
+	AdminMenu.CreateMenu(4, "Добавить пользователя", "Показать наим-ния", "Склад", "Выйти из уч.з.");
 	{
 		AdminMenu.sub[2].CreateMenu(2, "Показать товары", "Заказать товар");
 		AdminMenu.function[3] = Unreg;

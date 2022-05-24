@@ -9,7 +9,7 @@ class Product {
 	string amount;
 
 public:
-	Product(){};
+	Product(){}; 
 	Product(string _group, string _code, string _name, string _cost, string _dealer, string _amount) : group(_group), code(_code), name(_name), cost(_cost), dealer(_dealer), amount(_amount) {};
 
 	friend ofstream& operator<<(ofstream& stream, Product& obj) {
@@ -56,4 +56,57 @@ public:
 		else return true;
 	}
 	string GetAmount() { return amount; }
+};
+
+class Route
+{
+	string dell_code;
+	string from;
+	string to;
+	string distance;
+	string type;
+
+public:
+	Route();
+	~Route();
+
+private:
+
+};
+
+class Air_Route : public Route
+{
+	string price_of_km;
+	string max_weight;
+public:
+	Air_Route();
+	~Air_Route();
+
+private:
+
+};
+
+class Train_Route : public Route
+{
+	string price_of_km;
+	string max_weight;
+public:
+	Train_Route();
+	~Train_Route();
+
+private:
+
+};
+
+
+class Motor_Route : public Route
+{
+	string price_of_km;
+	string max_weight;
+public:
+	Motor_Route();
+	~Motor_Route();
+
+private:
+
 };
