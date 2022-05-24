@@ -114,10 +114,6 @@ void AirAdd(SOCKET s2, char* buf) {
 	air_rote.Set_from(from);
 	air_rote.Set_to(to);
 	air_rote.Set_distance(distance);
-	
-
-
-	air.push_back(air_route);
 }
 
 void ShowProdAdmin(SOCKET s2, char* buf) {
