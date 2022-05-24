@@ -84,9 +84,9 @@ void Unreg() {
 void SendAdd(SOCKET soc) {
 	Menu menu;
 	char buf[100];
-	menu.SetHeader("Группа товара");
+	menu.SetHeader("Тип транспортировки");
 
-	menu.CreateMenu(3, "Бакалея", "Консервация", "Масла,уксусы");
+	menu.CreateMenu(3, "Воздушный", "Железнодорожный", "Дорожный");
 
 	bool running = true;
 	while (running) {
@@ -95,7 +95,7 @@ void SendAdd(SOCKET soc) {
 
 		if (menu.currentID == "1") {
 			system("cls");
-			send(soc, "Бакалея", sizeof("Бакалея"), 0);
+			send(soc, "Воздушный", sizeof("Воздушный"), 0);
 			cout << "Введите код товара: ";
 			cin.getline(buf, 100);
 			send(soc, buf, sizeof(buf), 0);
@@ -342,9 +342,8 @@ void main() {
 	connect(s, (sockaddr*)&dest_addr, sizeof(dest_addr));
 
 	RegMenu.CreateMenu(1, "Войти"); 
-	UserMenu.CreateMenu(4, "Показать товары", "Поиск", "Корзина", "Выйти из уч.з.");
+	UserMenu.CreateMenu(4, "Показать", "Добавить", "Поиск", "Выйти из уч.з.");
 	{
-		UserMenu.sub[2].CreateMenu(4, "Посмотреть", "Добавить", "Удалить", "Оплатить");
 		UserMenu.function[3] = Unreg;
 	}
 	AdminMenu.CreateMenu(4, "Добавить пользователя", "Показать наим-ния", "Склад", "Выйти из уч.з.");
@@ -407,7 +406,7 @@ void main() {
 			}
 			else if (MenuPtr->currentID == "2") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				SendSearch(s);
+				SendAdd(s);
 				_getch();
 			}
 			else if (MenuPtr->currentID == "31") {

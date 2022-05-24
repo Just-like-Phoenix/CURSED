@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "Classes.h"
 #include "Libs.h"
 
@@ -26,9 +27,9 @@ vector<Train_Route> train;
 vector<Motor_Route> motor;
 
 void Init() {
-	vector<Air_Route>::iterator ptr = air.begin();;
-	vector<Train_Route>::iterator ptr = train.begin();;
-	vector<Motor_Route>::iterator ptr = motor.begin();;
+	vector<Air_Route>::iterator aptr = air.begin();;
+	vector<Train_Route>::iterator tptr = train.begin();;
+	vector<Motor_Route>::iterator mptr = motor.begin();;
 	
 	ifstream Air, Train, Motor;
 
@@ -61,37 +62,62 @@ void Init() {
 	Motor.close();
 }
 void Save() {
-	vector<Air_Route>::iterator ptr = air.begin();;
-	vector<Train_Route>::iterator ptr = train.begin();;
-	vector<Motor_Route>::iterator ptr = motor.begin();;
+	vector<Air_Route>::iterator aptr = air.begin();;
+	vector<Train_Route>::iterator tptr = train.begin();;
+	vector<Motor_Route>::iterator mptr = motor.begin();;
 
-	ifstream Air, Train, Motor;
+	ofstream Air, Train, Motor;
 
 	Air.open("Air.txt", ios::out);
 	Train.open("Train.txt", ios::out);
 	Motor.open("Motor.txt", ios::out);
-	for (; ptr != arr.end(); ptr++) {
-		if (ptr->GetGroup() == "Бакалея") Bak << *ptr;
+
+	for (; aptr != air.end(); aptr++) {
+		if (aptr->Get_type() == "Воздушный") Air << *aptr;
 	}
+	for (; tptr != train.end(); tptr++) {
+		if (tptr->Get_type() == "Железнодорожный") Train << *tptr;
+	}
+	for (; mptr != motor.end(); mptr++) {
+		if (mptr->Get_type() == "Дорожный") Motor << *mptr;
+	}
+
 	Air.close();
 	Train.close();
 	Motor.close();
 }
 
-void AddProd(SOCKET s2, char* buf) {
+void AirAdd(SOCKET s2, char* buf) {
+	stringstream ss;
 	*buf = '\0';
-	string group, name, dealer, code, cost;
+	string dell_code, from, to, distance, type, volume, weight;
+	int bufv, bufw;
 	
-	recv(s2, buf, 100, 0); group = buf; *buf = '\0';
-	recv(s2, buf, 100, 0); group = buf; *buf = '\0';
-	recv(s2, buf, 100, 0); code = buf; *buf = '\0';
-	recv(s2, buf, 100, 0); name = buf; *buf = '\0';
-	recv(s2, buf, 100, 0); cost = buf; *buf = '\0';
-	recv(s2, buf, 100, 0); dealer = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); type = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); type = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); dell_code = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); from = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); to = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); distance = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); volume = buf; *buf = '\0';
+	recv(s2, buf, 100, 0); weight = buf; *buf = '\0';
 
-	Product prod(group, code, name, cost, dealer, "0");
+	ss << volume;
+	ss >> bufv;
 
-	arr.push_back(prod);
+	ss << weight;
+	ss >> bufw;
+
+	Air_Route air_rote(bufv, bufw);
+	air_rote.Set_type(type);
+	air_rote.Set_dell_code(dell_code);
+	air_rote.Set_from(from);
+	air_rote.Set_to(to);
+	air_rote.Set_distance(distance);
+	
+
+
+	air.push_back(air_route);
 }
 
 void ShowProdAdmin(SOCKET s2, char* buf) {
