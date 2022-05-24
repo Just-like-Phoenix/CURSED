@@ -108,6 +108,10 @@ void AirAdd(SOCKET s2, char* buf) {
 	ss << weight;
 	ss >> bufw;
 
+	Air_Route air_rote;
+
+	air.push_back(air_rote(bufv, bufw));
+	
 	Air_Route air_rote(bufv, bufw);
 	air_rote.Set_type(type);
 	air_rote.Set_dell_code(dell_code);
