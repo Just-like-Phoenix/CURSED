@@ -21,53 +21,61 @@ int numcl = 0;
 ifstream Afile;
 ifstream Ufile;
 
-vector<Product> arr;
-vector<Product> cart;
+vector<Air_Route> air;
+vector<Train_Route> train;
+vector<Motor_Route> motor;
 
 void Init() {
-	vector<Product>::iterator ptr = arr.begin();
-	ifstream Bak, Kons, Masl;
-	Product tmp;
+	vector<Air_Route>::iterator ptr = air.begin();;
+	vector<Train_Route>::iterator ptr = train.begin();;
+	vector<Motor_Route>::iterator ptr = motor.begin();;
+	
+	ifstream Air, Train, Motor;
 
-	Bak.open("Бакалея.txt", ios::in);
-	while (Bak) {
-		Bak >> tmp;
-		arr.push_back(tmp);
-	}
-	arr.erase(arr.end() - 1);
-	Bak.close();
+	Air_Route atmp;
+	Train_Route ttmp;
+	Motor_Route mtmp;
 
-	Kons.open("Консервация.txt", ios::in);
-	while (Kons) {
-		Kons >> tmp;
-		arr.push_back(tmp);
+	Air.open("Air.txt", ios::in);
+	while (Air) {
+		Air >> atmp;
+		air.push_back(atmp);
 	}
-	arr.erase(arr.end() - 1);
-	Kons.close();
+	air.erase(air.end() - 1);
+	Air.close();
 
-	Masl.open("Маслауксусы.txt", ios::in);
-	while (Masl) {
-		Masl >> tmp;
-		arr.push_back(tmp);
+	Train.open("Train.txt", ios::in);
+	while (Train) {
+		Train >> ttmp;
+		train.push_back(ttmp);
 	}
-	arr.erase(arr.end() - 1);
-	Masl.close();
+	train.erase(train.end() - 1);
+	Train.close();
+
+	Motor.open("Motor.txt", ios::in);
+	while (Motor) {
+		Motor >> mtmp;
+		motor.push_back(mtmp);
+	}
+	motor.erase(motor.end() - 1);
+	Motor.close();
 }
 void Save() {
-	vector<Product>::iterator ptr = arr.begin();
-	ofstream Bak, Kons, Masl;
+	vector<Air_Route>::iterator ptr = air.begin();;
+	vector<Train_Route>::iterator ptr = train.begin();;
+	vector<Motor_Route>::iterator ptr = motor.begin();;
 
-	Bak.open("Бакалея.txt", ios::out);
-	Kons.open("Консервация.txt", ios::out);
-	Masl.open("Маслауксусы.txt", ios::out);
+	ifstream Air, Train, Motor;
+
+	Air.open("Air.txt", ios::out);
+	Train.open("Train.txt", ios::out);
+	Motor.open("Motor.txt", ios::out);
 	for (; ptr != arr.end(); ptr++) {
 		if (ptr->GetGroup() == "Бакалея") Bak << *ptr;
-		else if (ptr->GetGroup() == "Консервация") Kons << *ptr;
-		else if (ptr->GetGroup() == "Масла,уксусы") Masl << *ptr;
 	}
-	Bak.close();
-	Kons.close();
-	Masl.close();
+	Air.close();
+	Train.close();
+	Motor.close();
 }
 
 void AddProd(SOCKET s2, char* buf) {
