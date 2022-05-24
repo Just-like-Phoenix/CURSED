@@ -96,16 +96,22 @@ void SendAdd(SOCKET soc) {
 		if (menu.currentID == "1") {
 			system("cls");
 			send(soc, "Воздушный", sizeof("Воздушный"), 0);
-			cout << "Введите код товара: ";
+			cout << "Введите код маршрута: ";
 			cin.getline(buf, 100);
 			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите название товара: ";
+			cout << "Введите место погрузки: ";
 			cin.getline(buf, 100);
 			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите стоимость товара: ";
+			cout << "Введите место доставки: ";
 			cin.getline(buf, 100);
 			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите поставщика товара: ";
+			cout << "Введите растояние: ";
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
+			cout << "Введите объем в кубических метрах: ";
+			cin.getline(buf, 100);
+			send(soc, buf, sizeof(buf), 0);
+			cout << "Введите вес в тонах: ";
 			cin.getline(buf, 100);
 			send(soc, buf, sizeof(buf), 0);
 

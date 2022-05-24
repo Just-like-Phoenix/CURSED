@@ -42,7 +42,7 @@ void Init() {
 		Air >> atmp;
 		air.push_back(atmp);
 	}
-	air.erase(air.end() - 1);
+	//air.erase(air.end() - 1);
 	Air.close();
 
 	Train.open("Train.txt", ios::in);
@@ -50,7 +50,7 @@ void Init() {
 		Train >> ttmp;
 		train.push_back(ttmp);
 	}
-	train.erase(train.end() - 1);
+	//train.erase(train.end() - 1);
 	Train.close();
 
 	Motor.open("Motor.txt", ios::in);
@@ -58,7 +58,7 @@ void Init() {
 		Motor >> mtmp;
 		motor.push_back(mtmp);
 	}
-	motor.erase(motor.end() - 1);
+	//motor.erase(motor.end() - 1);
 	Motor.close();
 }
 void Save() {
@@ -116,124 +116,124 @@ void AirAdd(SOCKET s2, char* buf) {
 	air_rote.Set_distance(distance);
 }
 
-void ShowProdAdmin(SOCKET s2, char* buf) {
-	vector<Product>::iterator ptr = arr.begin();
+//void ShowProdAdmin(SOCKET s2, char* buf) {
+//	vector<Product>::iterator ptr = arr.begin();
+//
+//	for (; ptr != arr.end(); ptr++) {
+//		char group[100], name[100], cost[100], dealer[100], code[100];
+//		ptr->getFields_to_Admin(group, name, cost, code, dealer);
+//		send(s2, group, sizeof(group), 0);
+//		send(s2, name, sizeof(name), 0);
+//		send(s2, cost, sizeof(cost), 0);
+//		send(s2, code, sizeof(code), 0);
+//		send(s2, dealer, sizeof(dealer), 0);
+//	}
+//	send(s2, "0", sizeof("0"), 0);
+//}
+//void ShowProdUser(SOCKET s2, char* buf) {
+//	vector<Product>::iterator ptr = arr.begin();
+//
+//	for (; ptr != arr.end(); ptr++) {
+//		char group[100], name[100], cost[100], state[100];
+//		ptr->getFields_to_User(group, name, cost);
+//		send(s2, group, sizeof(group), 0);
+//		send(s2, name, sizeof(name), 0);
+//		send(s2, cost, sizeof(cost), 0);
+//		if (ptr->isExist()) {
+//			strcpy(state, "Есть в наличии");
+//		}
+//		else if (!ptr->isExist()) {
+//			strcpy(state, "Нет в наличии");
+//		}
+//		send(s2, state, sizeof(state), 0);
+//	}
+//	send(s2, "0", sizeof("0"), 0);
+//}
+//void ShowProdWarehouse(SOCKET s2, char* buf) {
+//	vector<Product>::iterator ptr = arr.begin();
+//
+//	for (; ptr != arr.end(); ptr++) {
+//		char group[100], name[100], cost[100], dealer[100], code[100], amount[100];
+//		ptr->getFields_to_Warehouse(group, name, cost, code, dealer, amount);
+//		send(s2, group, sizeof(group), 0);
+//		send(s2, name, sizeof(name), 0);
+//		send(s2, cost, sizeof(cost), 0);
+//		send(s2, code, sizeof(code), 0);
+//		send(s2, dealer, sizeof(dealer), 0);
+//		send(s2, amount, sizeof(amount), 0);
+//	}
+//	send(s2, "0", sizeof("0"), 0);
+//}
 
-	for (; ptr != arr.end(); ptr++) {
-		char group[100], name[100], cost[100], dealer[100], code[100];
-		ptr->getFields_to_Admin(group, name, cost, code, dealer);
-		send(s2, group, sizeof(group), 0);
-		send(s2, name, sizeof(name), 0);
-		send(s2, cost, sizeof(cost), 0);
-		send(s2, code, sizeof(code), 0);
-		send(s2, dealer, sizeof(dealer), 0);
-	}
-	send(s2, "0", sizeof("0"), 0);
-}
-void ShowProdUser(SOCKET s2, char* buf) {
-	vector<Product>::iterator ptr = arr.begin();
-
-	for (; ptr != arr.end(); ptr++) {
-		char group[100], name[100], cost[100], state[100];
-		ptr->getFields_to_User(group, name, cost);
-		send(s2, group, sizeof(group), 0);
-		send(s2, name, sizeof(name), 0);
-		send(s2, cost, sizeof(cost), 0);
-		if (ptr->isExist()) {
-			strcpy(state, "Есть в наличии");
-		}
-		else if (!ptr->isExist()) {
-			strcpy(state, "Нет в наличии");
-		}
-		send(s2, state, sizeof(state), 0);
-	}
-	send(s2, "0", sizeof("0"), 0);
-}
-void ShowProdWarehouse(SOCKET s2, char* buf) {
-	vector<Product>::iterator ptr = arr.begin();
-
-	for (; ptr != arr.end(); ptr++) {
-		char group[100], name[100], cost[100], dealer[100], code[100], amount[100];
-		ptr->getFields_to_Warehouse(group, name, cost, code, dealer, amount);
-		send(s2, group, sizeof(group), 0);
-		send(s2, name, sizeof(name), 0);
-		send(s2, cost, sizeof(cost), 0);
-		send(s2, code, sizeof(code), 0);
-		send(s2, dealer, sizeof(dealer), 0);
-		send(s2, amount, sizeof(amount), 0);
-	}
-	send(s2, "0", sizeof("0"), 0);
-}
-
-void SearchProd(SOCKET s2, char* buf) {
-	char str[100];
-	recv(s2, str, sizeof(str), 0);
-	recv(s2, str, sizeof(str), 0);
-
-	vector<Product>::iterator ptr = arr.begin();
-
-	for (; ptr != arr.end(); ptr++) {
-		char group[100], name[100], cost[100], state[100];
-		ptr->getFields_to_User(group, name, cost);
-		if (strstr(group, str) || strstr(name, str)) {
-			send(s2, group, sizeof(group), 0);
-			send(s2, name, sizeof(name), 0);
-			send(s2, cost, sizeof(cost), 0);
-			if (ptr->isExist()) {
-				strcpy(state, "Есть в наличии");
-			}
-			else if (!ptr->isExist()) {
-				strcpy(state, "Нет в наличии");
-			}
-			send(s2, state, sizeof(state), 0);
-		}
-	}
-	send(s2, "\0", sizeof("\0"), 0);
-}
-
-void AdminOrder(SOCKET s2){
-	char buf[100], amount[100];
-	recv(s2, buf, sizeof(buf), 0);
-	recv(s2, buf, sizeof(buf), 0);
-	recv(s2, amount, sizeof(amount), 0);
-	int i = atoi(buf);
-	if (!(i < 0 || i > arr.size())) arr[i].AddAmount(amount);
-}
-
-void AddToCart(SOCKET s2) {
-	char buf[100], amount[100];
-	recv(s2, buf, sizeof(buf), 0);
-	recv(s2, buf, sizeof(buf), 0);
-	recv(s2, amount, sizeof(amount), 0);
-	int i = atoi(buf);
-	if (!(i < 0 || i > arr.size())) {
-		cart.push_back(arr[i]);
-		cart[cart.size() - 1].SetAmount(amount);
-	}
-}
-void ShowCart(SOCKET s2) {
-	vector<Product>::iterator ptr = cart.begin();
-
-	for (; ptr != cart.end(); ptr++) {
-		char group[100], name[100], cost[100], state[100];
-		ptr->getFields_to_User(group, name, cost);
-		send(s2, group, sizeof(group), 0);
-		send(s2, name, sizeof(name), 0);
-		send(s2, cost, sizeof(cost), 0);
-		strcpy(state, ptr->GetAmount().c_str());
-		send(s2, state, sizeof(state), 0);
-	}
-	send(s2, "\0", sizeof("\0"), 0);
-}
-void DeleteCart(SOCKET s2) {
-	char buf[100];
-	recv(s2, buf, sizeof(buf), 0);
-	recv(s2, buf, sizeof(buf), 0);
-	int i = atoi(buf);
-	if (!(i < 0 || i > arr.size())) {
-		cart.erase(cart.begin() + i);
-	}
-}
+//void SearchProd(SOCKET s2, char* buf) {
+//	char str[100];
+//	recv(s2, str, sizeof(str), 0);
+//	recv(s2, str, sizeof(str), 0);
+//
+//	vector<Product>::iterator ptr = arr.begin();
+//
+//	for (; ptr != arr.end(); ptr++) {
+//		char group[100], name[100], cost[100], state[100];
+//		ptr->getFields_to_User(group, name, cost);
+//		if (strstr(group, str) || strstr(name, str)) {
+//			send(s2, group, sizeof(group), 0);
+//			send(s2, name, sizeof(name), 0);
+//			send(s2, cost, sizeof(cost), 0);
+//			if (ptr->isExist()) {
+//				strcpy(state, "Есть в наличии");
+//			}
+//			else if (!ptr->isExist()) {
+//				strcpy(state, "Нет в наличии");
+//			}
+//			send(s2, state, sizeof(state), 0);
+//		}
+//	}
+//	send(s2, "\0", sizeof("\0"), 0);
+//}
+//
+//void AdminOrder(SOCKET s2){
+//	char buf[100], amount[100];
+//	recv(s2, buf, sizeof(buf), 0);
+//	recv(s2, buf, sizeof(buf), 0);
+//	recv(s2, amount, sizeof(amount), 0);
+//	int i = atoi(buf);
+//	if (!(i < 0 || i > arr.size())) arr[i].AddAmount(amount);
+//}
+//
+//void AddToCart(SOCKET s2) {
+//	char buf[100], amount[100];
+//	recv(s2, buf, sizeof(buf), 0);
+//	recv(s2, buf, sizeof(buf), 0);
+//	recv(s2, amount, sizeof(amount), 0);
+//	int i = atoi(buf);
+//	if (!(i < 0 || i > arr.size())) {
+//		cart.push_back(arr[i]);
+//		cart[cart.size() - 1].SetAmount(amount);
+//	}
+//}
+//void ShowCart(SOCKET s2) {
+//	vector<Product>::iterator ptr = cart.begin();
+//
+//	for (; ptr != cart.end(); ptr++) {
+//		char group[100], name[100], cost[100], state[100];
+//		ptr->getFields_to_User(group, name, cost);
+//		send(s2, group, sizeof(group), 0);
+//		send(s2, name, sizeof(name), 0);
+//		send(s2, cost, sizeof(cost), 0);
+//		strcpy(state, ptr->GetAmount().c_str());
+//		send(s2, state, sizeof(state), 0);
+//	}
+//	send(s2, "\0", sizeof("\0"), 0);
+//}
+//void DeleteCart(SOCKET s2) {
+//	char buf[100];
+//	recv(s2, buf, sizeof(buf), 0);
+//	recv(s2, buf, sizeof(buf), 0);
+//	int i = atoi(buf);
+//	if (!(i < 0 || i > arr.size())) {
+//		cart.erase(cart.begin() + i);
+//	}
+//}
 
 DWORD WINAPI ThreadFunc(LPVOID client_socket)
 {
@@ -301,29 +301,17 @@ DWORD WINAPI ThreadFunc(LPVOID client_socket)
 		}
 		else if (buf[0] == '1') 
 		{
-			if (!strcmp(buf, "1_1")) AddProd(s2, buf);
+		/*	if (!strcmp(buf, "1_1")) AddProd(s2, buf);
 			else if (!strcmp(buf, "1_2")) ShowProdAdmin(s2, buf);
 			else if (!strcmp(buf, "1_31")) ShowProdWarehouse(s2, buf);
 			else if (!strcmp(buf, "1_32")) {
 				ShowProdWarehouse(s2, buf);
 				AdminOrder(s2);
-			}
+			}*/
 		}
 		else if (buf[0] == '2'){
-			if (!strcmp(buf, "2_1")) ShowProdUser(s2, buf);
-			else if (!strcmp(buf, "2_2")) SearchProd(s2, buf);
-			else if (!strcmp(buf, "2_31")) ShowCart(s2);
-			else if (!strcmp(buf, "2_32")) {
-				ShowProdUser(s2, buf);
-				AddToCart(s2);
-			}
-			else if (!strcmp(buf, "2_33")) {
-				ShowCart(s2);
-				DeleteCart(s2);
-			}
-			else if (!strcmp(buf, "2_34")) {
-				ShowCart(s2);
-			}
+			if (!strcmp(buf, "2_21")) AirAdd(s2, buf);
+			
 		}
 		*buf = '\0';
 	}
