@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Menu">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Typedef Name="Menu::voidFunctionPtr" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Menu.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ABgABAQQAAABAAJAAgAABABAgAAIQAAAAAAAAAABQiQ=</HashCode>
+      <FileName>Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

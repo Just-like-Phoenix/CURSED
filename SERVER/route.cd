@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Route">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAIAAIAgAAIAAAAAEAAgAgABEBDAAAEAAAAAAACAAA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Air_Route">
+    <Position X="3" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQABAAAAAAAAAAAAAgACAAAAACAAAQAgEAAAAAACAEA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Train_Route">
+    <Position X="3" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgAAAACAAAAAAAgACAAAAACAAAAAgEAAAAAACAEA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Motor_Route">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgAAAAAgAAAAAAgACAAAAACAAAAAgEAAAAABCAEA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

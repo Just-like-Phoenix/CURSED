@@ -13,5 +13,6 @@
 #include <map>
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;

@@ -1,62 +1,4 @@
-#include "Libs.h"
-
-class Product {
-	string code;
-	string cost;
-	string group;
-	string name;
-	string dealer;
-	string amount;
-
-public:
-	Product(){}; 
-	Product(string _group, string _code, string _name, string _cost, string _dealer, string _amount) : group(_group), code(_code), name(_name), cost(_cost), dealer(_dealer), amount(_amount) {};
-
-	friend ofstream& operator<<(ofstream& stream, Product& obj) {
-		stream << obj.group << " " << obj.code << " " << obj.name << " " << obj.cost << " " << obj.dealer << " " << obj.amount << "\n";
-		return stream;
-	}
-	friend ifstream& operator>>(ifstream& stream, Product& obj) {
-		stream >> obj.group >> obj.code >> obj.name >> obj.cost >> obj.dealer >> obj.amount;
-		return stream;
-	}
-	void getFields_to_User(char* _group, char* _name, char* _cost) {
-		strcpy(_group, group.c_str());
-		strcpy(_name, name.c_str());
-		strcpy(_cost, cost.c_str());
-	}
-	void getFields_to_Admin(char* _group, char* _name, char* _cost, char* _code, char* _dealer) {
-		strcpy(_group, group.c_str());
-		strcpy(_code, code.c_str());
-		strcpy(_dealer, dealer.c_str());
-		strcpy(_name, name.c_str());
-		strcpy(_cost, cost.c_str());
-	}
-	void getFields_to_Warehouse(char* _group, char* _name, char* _cost, char* _code, char* _dealer, char* _amount) {
-		strcpy(_group, group.c_str());
-		strcpy(_code, code.c_str());
-		strcpy(_dealer, dealer.c_str());
-		strcpy(_name, name.c_str());
-		strcpy(_cost, cost.c_str());
-		strcpy(_amount, amount.c_str());
-	}
-	string GetGroup() { return group; }
-	void AddAmount(char* adding){
-		char _amount[100];
-		int _adding = atoi(adding);
-		int _amount_ = atoi(amount.c_str());
-		_itoa_s(_adding + _amount_, _amount, sizeof(_amount), 10);
-		amount = _amount;
-	}
-	void SetAmount(char* _amount) {
-		amount = _amount;
-	}
-	bool isExist() {
-		if (amount == "0") return false;
-		else return true;
-	}
-	string GetAmount() { return amount; }
-};
+﻿#include "Libs.h"
 
 class Route
 {
@@ -87,75 +29,127 @@ class Air_Route : public Route
 {
 	double tarif = 2.2;
 	int density = 167;
-	int volume, weight;
+	int volume;
+	double price, weight;
 
 public:
 
 	Air_Route() {};
-	Air_Route(int _volume, int _weight) : volume(_volume), weight(_weight) {};
+	Air_Route(int _volume, int _weight, double _price) : volume(_volume), weight(_weight), price(_price) {};
+
+	void Get_Fields(char* _dell_code, char* _from, char* _to, char* _distance, char* _type, char* _volume, char* _weight, char* _price)
+	{
+		char buf[100] = "\0";
+
+		strcpy(_dell_code, Get_dell_code().c_str());
+		strcpy(_from, Get_from().c_str());
+		strcpy(_to, Get_to().c_str());
+		strcpy(_distance, Get_distance().c_str());
+		strcpy(_type, Get_type().c_str());
+		_itoa_s(volume, buf, sizeof(buf), 10);
+		strcpy(_volume, buf);
+		_gcvt_s(buf, sizeof(buf), weight, 17);
+		strcpy(_weight, buf);
+		_gcvt_s(buf, sizeof(buf), price, 17);
+		strcpy(_price, buf);
+	}
 
 	friend ofstream& operator<<(ofstream& stream, Air_Route& obj)
 	{
-		stream << obj.Get_dell_code() << " " << obj.Get_from() << " " << obj.Get_to() << " " << obj.Get_distance() << " " << obj.Get_type() << " " << obj.volume << " " << obj.weight << "\n";
+		stream << obj.Get_dell_code() << "▀" << obj.Get_from() << "▀" << obj.Get_to() << "▀" << obj.Get_distance() << "▀" << obj.Get_type() << "▀" << obj.volume << "▀" << obj.weight << "▀" << obj.price << "\n";
 		return stream;
 	}
-
 	friend ifstream& operator>>(ifstream& stream, Air_Route& obj) 
 	{
-		string dell_code;
-		string from;
-		string to;
-		string distance;
-		string type;
+		string dell_code, from, to, distance, type, svolume, sweight, sprice;
 
-		stream >> dell_code >> from >> to >> distance >> type >> obj.volume >> obj.weight;
+		getline(stream, dell_code, '▀');
+		getline(stream, from, '▀');
+		getline(stream, to, '▀');
+		getline(stream, distance, '▀');
+		getline(stream, type, '▀');
+		getline(stream, svolume, '▀');
+		getline(stream, sweight, '▀');
+		getline(stream, sprice, '▀');
 
 		obj.Set_dell_code(dell_code);
 		obj.Set_from(from);
 		obj.Set_to(to);
 		obj.Set_distance(distance);
 		obj.Set_type(type);
+		obj.volume = atoi(svolume.c_str());
+		obj.weight = atof(sweight.c_str());
+		obj.price = atof(sprice.c_str());
 
 		return stream;
 	}
 
+	void Set_price(double _price) { price = _price; }
+	void Set_weight(double _weight) { weight = _weight; }
+	void Set_volume(int _volume) { volume = _volume; }
 };
 
 class Train_Route : public Route
 {
 	double tarif = 0.8;
 	int max_volume = 75;
-	int volume, weight;
+	int volume;
+	double price, weight;
 
 public:
 	Train_Route() {};
-	Train_Route(int _volume, int _weight) : volume(_volume), weight(_weight) {};
+	Train_Route(int _volume, int _weight,double _price) : volume(_volume), weight(_weight), price(_price) {};
+
+	void Get_Fields(char* _dell_code, char* _from, char* _to, char* _distance, char* _type, char* _volume, char* _weight, char* _price)
+	{
+		char buf[100] = "\0";
+
+		strcpy(_dell_code, Get_dell_code().c_str());
+		strcpy(_from, Get_from().c_str());
+		strcpy(_to, Get_to().c_str());
+		strcpy(_distance, Get_distance().c_str());
+		strcpy(_type, Get_type().c_str());
+		_itoa_s(volume, buf, sizeof(buf), 10);
+		strcpy(_volume, buf);
+		_gcvt_s(buf, sizeof(buf), weight, 17);
+		strcpy(_weight, buf);
+		_gcvt_s(buf, sizeof(buf), price, 17);
+		strcpy(_price, buf);
+	}
 
 	friend ofstream& operator<<(ofstream& stream, Train_Route& obj)
 	{
-		stream << obj.Get_dell_code() << " " << obj.Get_from() << " " << obj.Get_to() << " " << obj.Get_distance() << " " << obj.Get_type() << " " << obj.volume << " " << obj.weight << "\n";
+		stream << obj.Get_dell_code() << "▀" << obj.Get_from() << "▀" << obj.Get_to() << "▀" << obj.Get_distance() << "▀" << obj.Get_type() << "▀" << obj.volume << "▀" << obj.weight << "▀" << obj.price << "\n";
 		return stream;
 	}
-
 	friend ifstream& operator>>(ifstream& stream, Train_Route& obj)
 	{
-		string dell_code;
-		string from;
-		string to;
-		string distance;
-		string type;
+		string dell_code, from, to, distance, type, svolume, sweight, sprice;
 
-		stream >> dell_code >> from >> to >> distance >> type >> obj.volume >> obj.weight;
+		getline(stream, dell_code, '▀');
+		getline(stream, from, '▀');
+		getline(stream, to, '▀');
+		getline(stream, distance, '▀');
+		getline(stream, type, '▀');
+		getline(stream, svolume, '▀');
+		getline(stream, sweight, '▀');
+		getline(stream, sprice, '▀');
 
 		obj.Set_dell_code(dell_code);
 		obj.Set_from(from);
 		obj.Set_to(to);
 		obj.Set_distance(distance);
 		obj.Set_type(type);
+		obj.volume = atoi(svolume.c_str());
+		obj.weight = atof(sweight.c_str());
+		obj.price = atof(sprice.c_str());
 
 		return stream;
 	}
 
+	void Set_price(double _price) { price = _price; }
+	void Set_weight(double _weight) { weight = _weight; }
+	void Set_volume(int _volume) { volume = _volume; }
 };
 
 
@@ -164,35 +158,61 @@ class Motor_Route : public Route
 	double tarif = 1.0;
 	int max_volume = 100;
 	double max_weight = 22;
-	int volume, weight;
+	int volume;
+	double price, weight;
 
 public:
 	Motor_Route() {};
-	Motor_Route(int _volume, int _weight) : volume(_volume), weight(_weight) {};
+	Motor_Route(int _volume, int _weight, double _price) : volume(_volume), weight(_weight), price(_price) {};
+
+	void Get_Fields(char* _dell_code, char* _from, char* _to, char* _distance, char* _type, char* _volume, char* _weight, char* _price)
+	{
+		char buf[100] = "\0";
+
+		strcpy(_dell_code, Get_dell_code().c_str());
+		strcpy(_from, Get_from().c_str());
+		strcpy(_to, Get_to().c_str());
+		strcpy(_distance, Get_distance().c_str());
+		strcpy(_type, Get_type().c_str());
+		_itoa_s(volume, buf, sizeof(buf), 10);
+		strcpy(_volume, buf);
+		_gcvt_s(buf, sizeof(buf), weight, 17);
+		strcpy(_weight, buf);
+		_gcvt_s(buf, sizeof(buf), price, 17);
+		strcpy(_price, buf);
+	}
 
 	friend ofstream& operator<<(ofstream& stream, Motor_Route& obj)
 	{
-		stream << obj.Get_dell_code() << " " << obj.Get_from() << " " << obj.Get_to() << " " << obj.Get_distance() << " " << obj.Get_type() << " " << obj.volume << " " << obj.weight << "\n";
+		stream << obj.Get_dell_code() << "▀" << obj.Get_from() << "▀" << obj.Get_to() << "▀" << obj.Get_distance() << "▀" << obj.Get_type() << "▀" << obj.volume << "▀" << obj.weight << "▀" << obj.price << "\n";
 		return stream;
 	}
-
 	friend ifstream& operator>>(ifstream& stream, Motor_Route& obj)
 	{
-		string dell_code;
-		string from;
-		string to;
-		string distance;
-		string type;
+		string dell_code, from, to, distance, type, svolume, sweight, sprice;
 
-		stream >> dell_code >> from >> to >> distance >> type >> obj.volume >> obj.weight;
+		getline(stream, dell_code, '▀');
+		getline(stream, from, '▀');
+		getline(stream, to, '▀');
+		getline(stream, distance, '▀');
+		getline(stream, type, '▀');
+		getline(stream, svolume, '▀');
+		getline(stream, sweight, '▀');
+		getline(stream, sprice, '▀');
 
 		obj.Set_dell_code(dell_code);
 		obj.Set_from(from);
 		obj.Set_to(to);
 		obj.Set_distance(distance);
 		obj.Set_type(type);
+		obj.volume = atoi(svolume.c_str());
+		obj.weight = atof(sweight.c_str());
+		obj.price = atof(sprice.c_str());
 
 		return stream;
 	}
 
+	void Set_price(double _price) { price = _price; }
+	void Set_weight(double _weight) { weight = _weight; }
+	void Set_volume(int _volume) { volume = _volume; }
 };

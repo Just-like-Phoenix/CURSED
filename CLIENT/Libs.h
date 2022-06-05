@@ -12,5 +12,6 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;

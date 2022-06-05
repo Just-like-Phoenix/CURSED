@@ -145,6 +145,9 @@
     <ClInclude Include="Libs.h" />
     <ClInclude Include="Menu.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="menu.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

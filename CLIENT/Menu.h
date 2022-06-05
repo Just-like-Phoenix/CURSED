@@ -116,7 +116,7 @@ public:
 				currentID = MakeID(&main->sub[paragraph - 1]);
 				main = &main->sub[main->paragraph - 1];
 			}
-			else if (main->function[main->paragraph - 1] == NULL && main->sub[main->paragraph - 1].arr == NULL) currentID = MakeID(&main->sub[main->paragraph- 1]);
+			else if (main->function[main->paragraph - 1] == NULL && main->sub[main->paragraph - 1].arr == NULL) currentID = MakeID(&main->sub[main->paragraph - 1]);
 			else if (main->function[main->paragraph - 1] != NULL) {
 				system("cls");
 				main->function[main->paragraph - 1]();

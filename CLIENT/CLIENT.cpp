@@ -3,11 +3,6 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #include <winsock2.h>
-#include <iostream>
-#include <cstring>
-#include <string>
-#include <string.h>
-#include <Windows.h>
 #include "Menu.h"
 #include "Libs.h"
 
@@ -20,12 +15,6 @@ Menu* MenuPtr = &RegMenu;
 bool unreg = false;
 int counter = 0;
 float TotCost = 0;
-
-//void Replace(char* buf, char replace, char to) {
-//	for (int i = 0; i < 60; i++) {
-//		if (buf[i] == replace) buf[i] = to;
-//	}
-//}
 
 class User {
 	bool isAdmin = false;
@@ -81,162 +70,79 @@ void Unreg() {
 	unreg = true;
 }
 
-void SendAdd(SOCKET soc) {
-	Menu menu;
-	char buf[100];
-	menu.SetHeader("Тип транспортировки");
+void SendAdd(SOCKET soc)
+{
+	char buf[100], dell_code[100], from[100], to[100], distance[100], volume[100], weight[100];
+	bool prov = true;
 
-	menu.CreateMenu(3, "Воздушный", "Железнодорожный", "Дорожный");
+	system("cls");
 
-	bool running = true;
-	while (running) {
-		menu.ShowMenu();
-		menu.Navigation(&running);
+	cout << "1) Экспрес" << endl;
+	cout << "2) Эконом" << endl;
+	cout << "3) Стандарт" << endl;
+	cout << "Выберите тип доставки: ";
+	cin.getline(buf, 100);
+	send(soc, buf, sizeof(buf), 0);
 
-		if (menu.currentID == "1") {
-			system("cls");
-			send(soc, "Воздушный", sizeof("Воздушный"), 0);
-			cout << "Введите код маршрута: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите место погрузки: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите место доставки: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите растояние: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите объем в кубических метрах: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите вес в тонах: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
+	do
+	{
+	cout << "Введите код маршрута (от 0 до 999999): ";
+	cin.getline(dell_code, 100);
+	if (!(atoi(dell_code) >= 0) && !(atoi(dell_code) <= 999999)) prov = false;
+	cout << "Введите место погрузки: ";
+	cin.getline(from, 100);
+	cout << "Введите место доставки: ";
+	cin.getline(to, 100);
+	cout << "Введите растояние: ";
+	cin.getline(distance, 100);
+	if (!(atoi(distance) > 0) && !(atoi(distance) <= 999999)) prov = false;
+	cout << "Введите объем в кубических метрах: ";
+	cin.getline(volume, 100);
+	if (!(atoi(volume) > 0) && !(atoi(volume) <= 999999)) prov = false;
+	cout << "Введите вес в тонах: ";
+	cin.getline(weight, 100);
+	if (!(strtod(weight, NULL) > 0) && !(strtod(weight, NULL) <= 999999)) prov = false;
+	} while (!prov);
 
-			running = false;
-		}
-		else if (menu.currentID == "2") {
-			system("cls");
-			send(soc, "Консервация", sizeof("Консервация"), 0);
-			cout << "Введите код товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите название товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите стоимость товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите поставщика товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-
-			running = false;
-		}
-		else if (menu.currentID == "3") {
-			system("cls");
-			send(soc, "Масла,уксусы", sizeof("Масла,уксусы"), 0);
-			cout << "Введите код товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите название товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите стоимость товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-			cout << "Введите поставщика товара: ";
-			cin.getline(buf, 100);
-			send(soc, buf, sizeof(buf), 0);
-
-			running = false;
-		}
+	if (prov)
+	{
+		send(soc, dell_code, sizeof(dell_code), 0);
+		send(soc, from, sizeof(from), 0);
+		send(soc, to, sizeof(to), 0);
+		send(soc, distance, sizeof(distance), 0);
+		send(soc, volume, sizeof(volume), 0);
+		send(soc, weight, sizeof(weight), 0);
 	}
+	
 }
 
-void AdminSendShow(SOCKET soc) {
+void SendShow(SOCKET soc) 
+{
 	system("cls");
-	cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
-	cout << "|   Код  |     Откуда    |     Куда      |   Дистанция   |      Тип      |     Цена      |\n";
-	cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
-	char code[100], from[100], to[100], distance[100] , type[100], price[100];
-	while (true) {
-		recv(soc, code, sizeof(code), 0);
-		if (strcmp(code, "0")) {
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	cout << "|  Код   |     Откуда     |      Куда      |   Дистанция   |      Тип      |     Вес     |    Объем    |     Цена      |\n";
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+	double weight, price;
+	while (true) 
+	{
+		recv(soc, dell_code, sizeof(dell_code), 0);
+		if (strcmp(dell_code, "0")) 
+		{
 			recv(soc, from, sizeof(from), 0);
 			recv(soc, to, sizeof(to), 0);
 			recv(soc, distance, sizeof(distance), 0);
 			recv(soc, type, sizeof(type), 0);
-			recv(soc, price, sizeof(price), 0);
-			printf("|%8s|%15s|%15s|%15s|%15s|%15s\n", code,  from, to, distance, type, price);
-			cout << "+--------+---------------+---------------+---------------+---------------+---------------+\n";
+			recv(soc, volume, sizeof(volume), 0);
+			recv(soc, sweight, sizeof(sweight), 0);
+			recv(soc, sprice, sizeof(sprice), 0);
+			weight = atof(sweight);
+			price = atof(sprice);
+			printf("|%8s|%16s|%16s|%15s|%15s|%13.1f|%13s|%15.1f|\n", dell_code, from, to, distance, type, weight, volume, price);
+			cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
 		}
 		else break;
 	}
-}
-void UserSendShow(SOCKET soc) {
-	system("cls");
-	cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-	cout << "|  № |     Группа    |                     Название                     | Цена|     Кол-во     +\n";
-	cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-	char group[100], name[100], cost[100], state[100];
-	counter = 0;
-	while (true) {
-		recv(soc, group, sizeof(group), 0);
-		if (strcmp(group, "0")) {
-			recv(soc, name, sizeof(name), 0);
-			recv(soc, cost, sizeof(cost), 0);
-			recv(soc, state, sizeof(state), 0);
-			printf("|%4d|%15s|%50s|%5s|%16s|\n", counter + 1, group, name, cost, state);
-			cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-			counter++;
-		}
-		else break;
-	}
-}
-void AdminSendShowWarehouse(SOCKET soc) {
-	system("cls");
-	cout << "+----+--------+---------------+--------------------------------------------------+-----+---------------+------+\n";
-	cout << "|  № |   Код  |     Группа    |                     Название                     | Цена|    Постащик   |Кол-во|\n";
-	cout << "+----+--------+---------------+--------------------------------------------------+-----+---------------+------+\n";
-	char group[100], name[100], cost[100], code[100], dealer[100], amount[100];
-	counter = 0;
-	while (true) {
-		recv(soc, group, sizeof(group), 0);
-		if (strcmp(group, "0")) {
-			recv(soc, name, sizeof(name), 0);
-			recv(soc, cost, sizeof(cost), 0);
-			recv(soc, code, sizeof(code), 0);
-			recv(soc, dealer, sizeof(dealer), 0);
-			recv(soc, amount, sizeof(amount), 0);
-			printf("|%4d|%8s|%15s|%50s|%5s|%15s|%6s|\n", counter + 1, code, group, name, cost, dealer, amount);
-			cout << "+----+--------+---------------+--------------------------------------------------+-----+---------------+------+\n";
-			counter++;
-		}
-		else break;
-	}
-}
-
-void WarehouseOrder(SOCKET soc) {
-	cout << "\n\nВыберите номер позиции: ";
-	int choise = 0, amount_ = 0;
-	char buf[100], amount[100];
-	cin >> choise;
-	if (choise < 0 || choise > counter) {
-		system("cls");
-		cout << "Такого номера нет!";
-	}
-	else {
-		choise--;
-		cout << "Введите кол-во: ";
-		cin >> amount_;
-		_itoa_s(choise, buf, sizeof(buf), 10);
-		_itoa_s(amount_, amount, sizeof(amount), 10);
-	}
-	send(soc, buf, sizeof(buf), 0);
-	send(soc, amount, sizeof(amount), 0);
 }
 
 void SendSearch(SOCKET soc) {
@@ -244,93 +150,388 @@ void SendSearch(SOCKET soc) {
 	bool exist = false;
 	char str[100];
 	cout << "Поиск: ";
-	cin >> str;
+	cin.getline(str, 100);
 	send(soc, str, sizeof(str), 0);
 	system("cls");
-	cout << "+---------------+--------------------------------------------------+-----+----------------+\n";
-	cout << "|     Группа    |                     Название                     | Цена|     Наличие    +\n";
-	cout << "+---------------+--------------------------------------------------+-----+----------------+\n";
-	char group[100], name[100], cost[100], state[100];
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	cout << "|  Код   |     Откуда     |      Куда      |   Дистанция   |      Тип      |     Вес     |    Объем    |     Цена      |\n";
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+	double weight, price;
 	while (true) {
 
-		recv(soc, group, sizeof(group), 0);
+		recv(soc, dell_code, sizeof(dell_code), 0);
 
-		if (group[0] != '\0') {
+		if (strlen(dell_code) > 1)
+		{
 			exist = true;
-			recv(soc, name, sizeof(name), 0);
-			recv(soc, cost, sizeof(cost), 0);
-			recv(soc, state, sizeof(state), 0);
-			printf("|%15s|%50s|%5s|%16s|\n", group, name, cost, state);
-			cout << "+---------------+--------------------------------------------------+-----+----------------+\n";
-			*group = '\0';
+			recv(soc, from, sizeof(from), 0);
+			recv(soc, to, sizeof(to), 0);
+			recv(soc, distance, sizeof(distance), 0);
+			recv(soc, type, sizeof(type), 0);
+			recv(soc, volume, sizeof(volume), 0);
+			recv(soc, sweight, sizeof(sweight), 0);
+			recv(soc, sprice, sizeof(sprice), 0);
+			weight = atof(sweight);
+			price = atof(sprice);
+			printf("|%8s|%16s|%16s|%15s|%15s|%13.1f|%13s|%15.1f|\n", dell_code, from, to, distance, type, weight, volume, price);
+			cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+			*dell_code = '\0';
 		}
 		else break;
 	}
 	if (exist == false) {
-		printf("|                                Совпадений не найдено                                    |\n");
-		printf("+-----------------------------------------------------------------------------------------+\n");
+		printf("|                                              Совпадений не найдено                                                   |\n");
+		printf("+----------------------------------------------------------------------------------------------------------------------+\n");
 	}
 }
 
-void SendCart(SOCKET soc) {
-	int choise, amount;
-	char _choise[100], _amount[100];
-	cout << "\n\nВыберите товар: ";
-	cin >> choise;
-	if (choise < 0 || choise > counter) {
-		system("cls");
-		cout << "Такого номера нет!";
-	}
-	else {
-		choise--;
-		cout << "Введите кол-во: ";
-		cin >> amount;
-		_itoa_s(choise, _choise, sizeof(_choise), 10);
-		_itoa_s(amount, _amount, sizeof(_amount), 10);
-	}
-	send(soc, _choise, sizeof(_choise), 0);
-	send(soc, _amount, sizeof(_amount), 0);
-}
-void ShowCart(SOCKET soc) {
+void SendShowForSort(SOCKET soc)
+{
 	system("cls");
-	cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-	cout << "|  № |     Группа    |                     Название                     | Цена|     Кол-во     +\n";
-	cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-	char group[100], name[100], cost[100], state[100];
-	counter = 0;
+	bool exist = false;
+	char str[100];
+	system("cls");
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	cout << "|  Код   |     Откуда     |      Куда      |   Дистанция   |      Тип      |     Вес     |    Объем    |     Цена      |\n";
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+	double weight, price;
 	while (true) {
-		recv(soc, group, sizeof(group), 0);
-		if (group[0] != '\0') {
-			recv(soc, name, sizeof(name), 0);
-			recv(soc, cost, sizeof(cost), 0);
-			recv(soc, state, sizeof(state), 0);
-			TotCost += (float)strtod(cost, NULL) * atoi(state);
-			printf("|%4d|%15s|%50s|%5s|%16s|\n", counter + 1, group, name, cost, state);
-			cout << "+----+---------------+--------------------------------------------------+-----+----------------+\n";
-			counter++;
+
+		recv(soc, dell_code, sizeof(dell_code), 0);
+
+		if (strlen(dell_code) > 1)
+		{
+			exist = true;
+			recv(soc, from, sizeof(from), 0);
+			recv(soc, to, sizeof(to), 0);
+			recv(soc, distance, sizeof(distance), 0);
+			recv(soc, type, sizeof(type), 0);
+			recv(soc, volume, sizeof(volume), 0);
+			recv(soc, sweight, sizeof(sweight), 0);
+			recv(soc, sprice, sizeof(sprice), 0);
+			weight = atof(sweight);
+			price = atof(sprice);
+			printf("|%8s|%16s|%16s|%15s|%15s|%13.1f|%13s|%15.1f\n", dell_code, from, to, distance, type, weight, volume, price);
+			cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+			*dell_code = '\0';
 		}
 		else break;
 	}
+	if (exist == false) {
+		printf("|                                              Совпадений не найдено                                                   |\n");
+		printf("+----------------------------------------------------------------------------------------------------------------------+\n");
+	}
 }
-void DeleteCart(SOCKET soc) {
-	int choise;
-	char _choise[100];
-	cout << "\n\nВыберите товар: ";
-	cin >> choise;
-	if (choise < 0 || choise > counter) {
-		system("cls");
+void SendSort(SOCKET soc)
+{
+	Menu SortMenu;
+
+	
+	SortMenu.CreateMenu(2, "По месту погрузки", "По месту доставки");
+	{
+		SortMenu.sub[0].CreateMenu(2, "По возрастанию", "По убыванию");
+		SortMenu.sub[1].CreateMenu(2, "По возрастанию", "По убыванию");
+	}
+	
+
+	bool running = true;
+	while (running) 
+	{
+		MenuPtr = &SortMenu;
+
+		MenuPtr->SetHeader("Сортировка");
+		MenuPtr->currentID = "0";
+		MenuPtr->ShowMenu();
+		MenuPtr->Navigation(&running);
+
+		if (MenuPtr->currentID == "11") 
+		{
+			SendRequest(soc, "2_3" + MenuPtr->currentID);
+			SendShowForSort(soc);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "12") 
+		{
+			SendRequest(soc, "2_3" + MenuPtr->currentID);
+			SendShowForSort(soc);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "21")
+		{
+			SendRequest(soc, "2_3" + MenuPtr->currentID);
+			SendShowForSort(soc);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "22") 
+		{
+			SendRequest(soc, "2_3" + MenuPtr->currentID);
+			SendShowForSort(soc);
+			_getch();
+		}
+	}
+}
+
+void SendFiltr(SOCKET soc)
+{
+	system("cls");
+	bool exist = false;
+	char str[100];
+	cout << "Фльтр: ";
+	cin.getline(str, 100);
+	send(soc, str, sizeof(str), 0);
+	system("cls");
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	cout << "|  Код   |     Откуда     |      Куда      |   Дистанция   |      Тип      |     Вес     |    Объем    |     Цена      |\n";
+	cout << "+--------+----------------+----------------+---------------+---------------+-------------+-------------+---------------+\n";
+	char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+	double weight, price;
+	while (true) {
+
+		recv(soc, dell_code, sizeof(dell_code), 0);
+
+		if (strlen(dell_code) > 1)
+		{
+			exist = true;
+			recv(soc, from, sizeof(from), 0);
+			recv(soc, to, sizeof(to), 0);
+			recv(soc, distance, sizeof(distance), 0);
+			recv(soc, type, sizeof(type), 0);
+			recv(soc, volume, sizeof(volume), 0);
+			recv(soc, sweight, sizeof(sweight), 0);
+			recv(soc, sprice, sizeof(sprice), 0);
+			weight = atof(sweight);
+			price = atof(sprice);
+			printf("|%8s|%16s|%16s|%15s|%15s|%13.1f|%13s|%15.1f|\n", dell_code, from, to, distance, type, weight, volume, price);
+			cout << "+--------+--------------+--------------+---------------+---------------+---------------+---------------+---------------+\n";
+			*dell_code = '\0';
+		}
+		else break;
+	}
+	if (exist == false) {
+		printf("|                                              Совпадений не найдено                                                   |\n");
+		printf("+----------------------------------------------------------------------------------------------------------------------+\n");
+	}
+}
+
+void Delete(SOCKET soc)
+{
+	char buf[100], prov[10];
+	int n = 1;
+
+	system("cls");
+	
+	recv(soc, prov, sizeof(prov), 0);
+
+	if (atoi(prov) > 0)
+	{
+		cout << "+---+--------+----------------+----------------+--------------+---------------+------------+------------+--------------+\n";
+		cout << "| № |  Код   |     Откуда     |      Куда      |   Дистанция  |      Тип      |     Вес    |    Объем   |     Цена     |\n";
+		cout << "+---+--------+----------------+----------------+--------------+---------------+------------+------------+--------------+\n";
+		char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+		double weight, price;
+		while (true)
+		{
+			recv(soc, dell_code, sizeof(dell_code), 0);
+			if (strlen(dell_code) > 1)
+			{
+				recv(soc, from, sizeof(from), 0);
+				recv(soc, to, sizeof(to), 0);
+				recv(soc, distance, sizeof(distance), 0);
+				recv(soc, type, sizeof(type), 0);
+				recv(soc, volume, sizeof(volume), 0);
+				recv(soc, sweight, sizeof(sweight), 0);
+				recv(soc, sprice, sizeof(sprice), 0);
+				weight = atof(sweight);
+				price = atof(sprice);
+				printf("|%3d|%8s|%16s|%16s|%14s|%15s|%12.1f|%12s|%14.1f|\n", n, dell_code, from, to, distance, type, weight, volume, price);
+				cout << "+---+--------+----------------+----------------+--------------+---------------+------------+------------+--------------+\n";
+				n++;
+			}
+			else break;
+		}
+
+		cout << "Выберите строку для удаления: ";
+		cin.getline(buf, 100);
+		if (atoi(buf) <= n && atoi(buf) > 0)
+		{
+			send(soc, buf, sizeof(buf), 0);
+		}
+		else
+		{
+			cout << "Такого номера нет!";
+		}
+	}
+	else
+	{
+		cout << "Файл пустой!";
+	}
+}
+
+void Update(SOCKET soc, int interf)
+{
+	char buf[100], prov[100];
+	int n = 1;
+	bool provforcin = true;
+
+	system("cls");
+
+	cout << "+---+--------+--------------+--------------+--------------+---------------+--------------+--------------+--------------+\n";
+	cout << "| № |  Код   |    Откуда    |     Куда     |   Дистанция  |      Тип      |      Вес     |     Объем    |     Цена     |\n";
+	cout << "+---+--------+--------------+--------------+--------------+---------------+--------------+--------------+--------------+\n";
+	char dell_code[100], from[100], to[100], distance[100], type[100], volume[100], sweight[100], sprice[100];
+	double weight, price;
+	while (true)
+	{
+		recv(soc, dell_code, sizeof(dell_code), 0);
+		if (strlen(dell_code) > 1)
+		{
+			recv(soc, from, sizeof(from), 0);
+			recv(soc, to, sizeof(to), 0);
+			recv(soc, distance, sizeof(distance), 0);
+			recv(soc, type, sizeof(type), 0);
+			recv(soc, volume, sizeof(volume), 0);
+			recv(soc, sweight, sizeof(sweight), 0);
+			recv(soc, sprice, sizeof(sprice), 0);
+			weight = atof(sweight);
+			price = atof(sprice);
+			printf("|%8s|%16s|%16s|%15s|%15s|%13.1f|%13s|%15.1f|\n", dell_code, from, to, distance, type, weight, volume, price);
+			cout << "+--------+--------------+--------------+---------------+---------------+---------------+---------------+---------------+\n";
+			n++;
+		}
+		else break;
+	}
+	*buf = '\0';
+	cout << "Выберите строку для изменения: ";
+	cin.getline(buf, 100);
+	send(soc, buf, sizeof(buf), 0);
+	if (atoi(buf) <= n && atoi(buf) > 0)
+	{
+		if (interf == 1)
+		{
+			do
+			{
+				*dell_code = '\0';
+				cout << "Введите новый код маршрута: ";
+				cin.getline(dell_code, 100);
+				if (!(atoi(dell_code) > 0) && !(atoi(dell_code) <= 999999)) provforcin = false;
+			} while (!provforcin);
+			send(soc, dell_code, sizeof(dell_code), 0);
+		}
+		else if (interf == 2)
+		{
+			do
+			{
+				cout << "Введите место погрузки: ";
+				cin.getline(from, 100);
+				cout << "Введите место доставки: ";
+				cin.getline(to, 100);
+				cout << "Введите растояние: ";
+				cin.getline(distance, 100);
+				if (!(atoi(distance) > 0) && !(atoi(distance) <= 999999)) provforcin = false;
+			} while (!provforcin);
+			send(soc, from, sizeof(from), 0);
+			send(soc, to, sizeof(to), 0);
+			send(soc, distance, sizeof(distance), 0);
+		}
+		else if (interf == 3)
+		{
+			do
+			{
+				cout << "Введите объем в кубических метрах: ";
+				cin.getline(volume, 100);
+				if (!(atoi(volume) > 0) && !(atoi(volume) <= 999999)) provforcin = false;
+				cout << "Введите вес в тонах: ";
+				cin.getline(weight, 100);
+				if (!(strtod(weight, NULL) > 0) && !(strtod(weight, NULL) <= 999999)) provforcin = false;
+			} while (!provforcin);
+
+			send(soc, volume, sizeof(volume), 0);
+			send(soc, weight, sizeof(weight), 0);
+		}
+	}
+	else
+	{
 		cout << "Такого номера нет!";
 	}
-	else {
-		choise--;
-		_itoa_s(choise, _choise, sizeof(_choise), 10);
-	}
-	send(soc, _choise, sizeof(_choise), 0);
 }
-void PayCart(SOCKET soc) {
-	printf("%72c|  К оплате  |%9.2f|\n", ' ', TotCost);
-	cout << "                                                                        +------------+---------+\n";
-	TotCost = 0;
+void UpdateMenu(SOCKET soc)
+{
+	Menu UpdateMenu;
+
+	UpdateMenu.CreateMenu(3, "Воздушный", "Железнодорожный", "Дорожный");
+	{
+		UpdateMenu.sub[0].CreateMenu(3, "Код доставки", "Информация о доставке", "Информация о грузе");
+		UpdateMenu.sub[1].CreateMenu(3, "Код доставки", "Информация о доставке", "Информация о грузе");
+		UpdateMenu.sub[2].CreateMenu(3, "Код доставки", "Информация о доставке", "Информация о грузе");
+	}
+
+	bool running = true;
+	while (running)
+	{
+		MenuPtr = &UpdateMenu;
+
+		MenuPtr->SetHeader("Изменить");
+		MenuPtr->currentID = "0";
+		MenuPtr->ShowMenu();
+		MenuPtr->Navigation(&running);
+
+		if (MenuPtr->currentID == "11")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 1);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "12")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 2);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "13")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 3);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "21")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 1);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "22")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 2);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "23")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 3);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "31")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 1);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "32")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 2);
+			_getch();
+		}
+		else if (MenuPtr->currentID == "33")
+		{
+			SendRequest(soc, "1_3" + MenuPtr->currentID);
+			Update(soc, 3);
+			_getch();
+		}
+	}
 }
 
 void main() {
@@ -348,17 +549,18 @@ void main() {
 	connect(s, (sockaddr*)&dest_addr, sizeof(dest_addr));
 
 	RegMenu.CreateMenu(1, "Войти"); 
-	UserMenu.CreateMenu(4, "Показать", "Добавить", "Поиск", "Выйти из уч.з.");
+	UserMenu.CreateMenu(5, "Показать", "Поиск", "Сортировка", "Фильтрация", "Выйти из уч.з.");
 	{
-		UserMenu.function[3] = Unreg;
+		UserMenu.sub[3].CreateMenu(3, "По месту погрузки", "По месту доставки", "По типу");
+
+		UserMenu.function[4] = Unreg;
 	}
-	AdminMenu.CreateMenu(4, "Добавить пользователя", "Показать наим-ния", "Склад", "Выйти из уч.з.");
+	AdminMenu.CreateMenu(5, "Показать", "Добавить", "Изменить", "Удалить", "Выйти из уч.з.");
 	{
-		AdminMenu.sub[2].CreateMenu(2, "Показать товары", "Заказать товар");
-		AdminMenu.function[3] = Unreg;
+		AdminMenu.sub[3].CreateMenu(3, "Воздушный", "Железнодорожный", "Дорожный");
+		AdminMenu.function[4] = Unreg;
 	}
 	
-
 	bool running = true;
 	while (running) {
 		if (!user.GetStatus() && user.GetSmth()) MenuPtr = &UserMenu;
@@ -375,65 +577,64 @@ void main() {
 				SendReg(s);
 				_getch();
 			}
-			if (MenuPtr->currentID == "2") {
-				SendRequest(s, "0_" + MenuPtr->currentID);
-				SendReg(s);
-				_getch();
-			}
 		}
 		else if (user.GetStatus() && user.GetSmth()) {             //Admin 
 			if (MenuPtr->currentID == "1") {
 				SendRequest(s, "1_" + MenuPtr->currentID);
-				SendAdd(s);
+				SendShow(s);
 				_getch();
 			}
 			else if (MenuPtr->currentID == "2") {
 				SendRequest(s, "1_" + MenuPtr->currentID);
-				AdminSendShow(s);
+				SendAdd(s);
 				_getch();
 			}
-			else if (MenuPtr->currentID == "31") {
+			else if (MenuPtr->currentID == "3") {
+				UpdateMenu(s);
+			}
+			else if (MenuPtr->currentID == "41") {
 				SendRequest(s, "1_" + MenuPtr->currentID);
-				AdminSendShowWarehouse(s);
+				Delete(s);
 				_getch();
 			}
-			else if (MenuPtr->currentID == "32") {
+			else if (MenuPtr->currentID == "42") {
 				SendRequest(s, "1_" + MenuPtr->currentID);
-				AdminSendShowWarehouse(s);
-				WarehouseOrder(s);
+				Delete(s);
+				_getch();
+			}
+			else if (MenuPtr->currentID == "43") {
+				SendRequest(s, "1_" + MenuPtr->currentID);
+				Delete(s);
 				_getch();
 			}
 		}
 		else if (!user.GetStatus() && user.GetSmth()) {             //User 
 			if (MenuPtr->currentID == "1") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				UserSendShow(s);
+				SendShow(s);
 				_getch();
 			}
 			else if (MenuPtr->currentID == "2") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				SendAdd(s);
+				SendSearch(s);
 				_getch();
 			}
-			else if (MenuPtr->currentID == "31") {
+			else if (MenuPtr->currentID == "3") {
+				SendSort(s);
+			}
+			else if (MenuPtr->currentID == "41") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				ShowCart(s);
+				SendFiltr(s);
 				_getch();
 			}
-			else if (MenuPtr->currentID == "32") {
+			else if (MenuPtr->currentID == "42") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				UserSendShow(s);
-				SendCart(s);
+				SendFiltr(s);
+				_getch();
 			}
-			else if (MenuPtr->currentID == "33") {
+			else if (MenuPtr->currentID == "43") {
 				SendRequest(s, "2_" + MenuPtr->currentID);
-				ShowCart(s);
-				DeleteCart(s);
-			}
-			else if (MenuPtr->currentID == "34") {
-				SendRequest(s, "2_" + MenuPtr->currentID);
-				ShowCart(s);
-				PayCart(s);
+				SendFiltr(s);
 				_getch();
 			}
 		}
